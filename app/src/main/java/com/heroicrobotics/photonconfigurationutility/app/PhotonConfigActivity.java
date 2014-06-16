@@ -14,8 +14,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
+import com.heroicrobot.dropbit.devices.pixelpusher.PixelPusher;
 import com.heroicrobotics.photonconfigurationutility.app.RegistryService.LocalBinder;
 
 public class PhotonConfigActivity extends ActionBarActivity {
@@ -24,6 +27,7 @@ public class PhotonConfigActivity extends ActionBarActivity {
     private String mPusherMac;
     protected RegistryService myService;
     protected boolean isBound;
+    private static PixelPusher pusher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +43,7 @@ public class PhotonConfigActivity extends ActionBarActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             mPusherMac = extras.getString(PIXEL_PUSHER_MAC_ADDR_KEY);
+            pusher = myService.getRegistry().getPusherMap().get(mPusherMac);
         }
 
     }
@@ -90,6 +95,12 @@ public class PhotonConfigActivity extends ActionBarActivity {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             // Apply the adapter to the spinner
             spinner.setAdapter(adapter);
+            if (pusher != null) {
+                ((EditText) getView().findViewById(R.id.groupNumberEditText)).setText(pusher.getGroupOrdinal());
+                ((EditText) getView().findViewById(R.id.pusherNumberEditText)).setText(pusher.getControllerOrdinal());
+
+
+            }
         }
     }
 
