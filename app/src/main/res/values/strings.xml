@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">PixelPusher Configuration Tool</string>
+    <string name="action_settings">Settings</string>
+    <string name="scan_button_label">Scan</string>
+    <string name="title_activity_photon_config">PhotonConfigActivity</string>
+    <string name="groupNumberLabel">Group Number</string>
+    <string name="pusherNumberLabel">Pusher Number</string>
+    <string name="horizontalRule">Horizontal rule</string>
+    <string name="rebootButton">Reboot</string>
+    <string name="saveButton">Save</string>
+    <string name="wifiSSIDLabel">SSID</string>
+    <string name="wifiPassLabel">Password</string>
+    <string name="welcome_text">Welcome to the Heroic Robotics PixelPusher Photon configuration
+        utility.</string>
+    <string name="welcome_new_or_existing_prompt">Are you setting up a new Photon or
+        reconfiguring one you\'ve already set up?</string>
+    <string name="new_photon_button_label">New Photon</string>
+    <string name="existing_photon_button_label">Existing Photon</string>
+
+    <string-array name="wifi_protection_choices">
+        <item>None</item>
+        <item>WEP</item>
+        <item>WPA</item>
+        <item>WPA2</item>
+    </string-array>
+
+    <string name="title_activity_new_photon">Configure a new Photon</string>
+    <string name="new_photon_wifi_label">"I need to create a wireless connection to the new Photon. I'm going to attempt to create a WiFi access point with the settings a new Photon expects.\n\nIf you’ve manually set up a wireless connection to the Photon, click skip below."</string>
+    <string name="continue_button_label">Continue</string>
+    <string name="skip_button_label">Skip</string>
+    <string name="title_activity_detect_photon">Choose a PixelPusher to configure</string>
+    <string name="title_activity_existing_photon">Configure an existing Photon</string>
+    <string name="existing_photon_connection_instructions_label">Please make sure your phone is configured to connect to your existing photon.  If you can\'t get this to work, please factory reset your Photon by pressing and holding the button while you plug it into power.  Then you should follow the new Photon configuration path.</string>
+    <string name="scan_result_multiple_photon_label">I have detected multiple Photons.\nPlease select one below to configure.</string>
+    <string name="scan_result_no_photon_label">I have detected no Photons :(\nPlease click \'scan\' to attempt again.</string>
+    <string name="scan_request_label">Please click scan to look for Photons</string>
+</resources>
