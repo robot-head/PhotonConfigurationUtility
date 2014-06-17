@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
@@ -29,6 +30,14 @@ public class PhotonConfigActivity extends ActionBarActivity {
     protected boolean isBound;
     private static PixelPusher pusher;
 
+    class GetPusherDetailsTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            return null;
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,11 +49,7 @@ public class PhotonConfigActivity extends ActionBarActivity {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new PlaceholderFragment()).commit();
         }
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            mPusherMac = extras.getString(PIXEL_PUSHER_MAC_ADDR_KEY);
-            pusher = myService.getRegistry().getPusherMap().get(mPusherMac);
-        }
+
 
     }
 
@@ -102,6 +107,20 @@ public class PhotonConfigActivity extends ActionBarActivity {
             LocalBinder binder = (LocalBinder) service;
             myService = binder.getService();
             isBound = true;
+            Bundle extras = getIntent().getExtras();
+            if (extras != null) {
+                mPusherMac = extras.getString(PIXEL_PUSHER_MAC_ADDR_KEY);
+                if (mPusherMac != null) {
+                    pusher = myService.getRegistry().getPusherMap().get(mPusherMac);
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            ((EditText) findViewById(R.id.groupNumberEditText)).setText("" + pusher.getGroupOrdinal());
+                            ((EditText) findViewById(R.id.pusherNumberEditText)).setText("" + pusher.getControllerOrdinal());
+                        }
+                    });
+
+                }
+            }
         }
 
         public void onServiceDisconnected(ComponentName arg0) {
