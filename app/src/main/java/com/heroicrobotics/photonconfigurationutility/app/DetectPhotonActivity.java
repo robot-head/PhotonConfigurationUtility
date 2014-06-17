@@ -74,8 +74,19 @@ public class DetectPhotonActivity extends ActionBarActivity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         startService(new Intent(this, RegistryService.class));
         bindService(new Intent(this, RegistryService.class), myConnection, BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unbindService(myConnection);
     }
 
     private RegistryService myService;
