@@ -1,0 +1,21 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".PhotonConfigActivity" >
+    <item android:id="@+id/action_reboot"
+        android:title="@string/rebootButton"
+        android:orderInCategory="103"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_apply_wifi"
+        android:title="@string/apply_wifi_button_text"
+        android:orderInCategory="101"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_save"
+        android:title="@string/saveButton"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_test"
+        android:title="@string/test_button_label"
+        android:orderInCategory="102"
+        app:showAsAction="never" />
+</menu>

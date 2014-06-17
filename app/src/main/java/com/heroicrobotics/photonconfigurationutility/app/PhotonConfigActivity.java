@@ -1,25 +1,25 @@
 package com.heroicrobotics.photonconfigurationutility.app;
 
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.AsyncTask;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.heroicrobot.dropbit.devices.pixelpusher.PixelPusher;
+import com.heroicrobot.dropbit.devices.pixelpusher.PusherCommand;
 import com.heroicrobotics.photonconfigurationutility.app.RegistryService.LocalBinder;
 
 public class PhotonConfigActivity extends ActionBarActivity {
@@ -28,14 +28,16 @@ public class PhotonConfigActivity extends ActionBarActivity {
     private String mPusherMac;
     protected RegistryService myService;
     protected boolean isBound;
-    private static PixelPusher pusher;
+    private PixelPusher pusher;
+    private SharedPreferences sharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photon_config);
-        Intent intent = new Intent(this, RegistryService.class);
-        bindService(intent, myConnection, Context.BIND_AUTO_CREATE);
+        startService(new Intent(this, RegistryService.class));
+        bindService(new Intent(this, RegistryService.class), myConnection, BIND_AUTO_CREATE);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -49,7 +51,7 @@ public class PhotonConfigActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
 
         // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.photon_config, menu);
+        getMenuInflater().inflate(R.menu.config_photon, menu);
         return true;
     }
 
@@ -58,11 +60,21 @@ public class PhotonConfigActivity extends ActionBarActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        switch(item.getItemId()) {
+            case R.id.action_reboot:
+                reboot();
+                return true;
+            case R.id.action_save:
+                save();
+                return true;
+            case R.id.action_apply_wifi:
+                applyWifi();
+                return true;
+            case R.id.action_test:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -84,12 +96,6 @@ public class PhotonConfigActivity extends ActionBarActivity {
         @Override
         public void onActivityCreated(Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
-            if (pusher != null) {
-                ((EditText) getView().findViewById(R.id.groupNumberEditText)).setText(pusher.getGroupOrdinal());
-                ((EditText) getView().findViewById(R.id.pusherNumberEditText)).setText(pusher.getControllerOrdinal());
-
-
-            }
         }
     }
 
@@ -121,4 +127,31 @@ public class PhotonConfigActivity extends ActionBarActivity {
 
     };
 
+    public void save() {
+
+    }
+
+    void applyWifi() {
+        if(pusher == null) {
+           return;
+        }
+        String ssid = sharedPref.getString(WifiSettingsActivity.PREF_SSID_KEY, "");
+        String pass = sharedPref.getString(WifiSettingsActivity.PREF_WIFI_PASS_KEY, "");
+        String protection = sharedPref.getString(WifiSettingsActivity.PREF_WIFI_PROTECTION_KEY, "");
+        if(ssid.equals("") || pass.equals("") || protection.equals("")) {
+            Toast.makeText(this, "Invalid wifi configuration", Toast.LENGTH_LONG).show();
+        }
+        Log.d("TESTING", "Setting wifi config " + ssid + " : " + pass + " : " + protection);
+        pusher.sendCommand(new PusherCommand((byte) 3, ssid, pass, protection));
+        // TODO: Join same wifi settings
+        myService.getRegistry().expireDevice(pusher.getMacAddress());
+
+        startActivity(new Intent(this, DetectPhotonActivity.class));
+    }
+
+    void reboot() {
+        pusher.sendCommand(new PusherCommand((byte) 1));
+        myService.getRegistry().expireDevice(pusher.getMacAddress());
+        startActivity(new Intent(this, DetectPhotonActivity.class));
+    }
 }

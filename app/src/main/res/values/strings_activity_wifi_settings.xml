@@ -23,10 +23,10 @@
         <item>WPA2</item>
     </string-array>
     <string-array name="pref_wifi_protection_list_values">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
+        <item>none</item>
+        <item>wep</item>
+        <item>wpa</item>
+        <item>wpa2</item>
     </string-array>
 
 
