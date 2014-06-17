@@ -135,9 +135,14 @@ public class NewPhotonActivity extends ActionBarActivity {
         Log.d(TAG, "*** setWifiApEnabled CALLED **** " + enabled);
 
         WifiConfiguration config = new WifiConfiguration();
-        config.SSID = "\"PixelPusher\"";
+        config.SSID = "HeroicRobotics";
+        config.preSharedKey = "PixelPusher";
+        config.allowedAuthAlgorithms.clear();
+        config.allowedGroupCiphers.clear();
+        config.allowedKeyManagement.clear();
+        config.allowedPairwiseCiphers.clear();
+        config.allowedProtocols.clear();
         config.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
-        config.preSharedKey = "\"HeroicRobotics\"";
         config.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
         config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
         config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
