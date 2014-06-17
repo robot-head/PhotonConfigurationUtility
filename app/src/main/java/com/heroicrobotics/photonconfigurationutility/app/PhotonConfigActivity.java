@@ -87,14 +87,6 @@ public class PhotonConfigActivity extends ActionBarActivity {
         @Override
         public void onActivityCreated(Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
-            Spinner spinner = (Spinner) getView().findViewById(R.id.wifi_protection_spinner);
-            // Create an ArrayAdapter using the string array and a default spinner layout
-            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
-                    R.array.wifi_protection_choices, android.R.layout.simple_spinner_item);
-            // Specify the layout to use when the list of choices appears
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            // Apply the adapter to the spinner
-            spinner.setAdapter(adapter);
             if (pusher != null) {
                 ((EditText) getView().findViewById(R.id.groupNumberEditText)).setText(pusher.getGroupOrdinal());
                 ((EditText) getView().findViewById(R.id.pusherNumberEditText)).setText(pusher.getControllerOrdinal());

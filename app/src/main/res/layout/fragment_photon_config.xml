@@ -76,67 +76,6 @@
                 android:ems="10"
                 android:inputType="number" />
 
-            <ImageView
-                android:id="@+id/horizontalRule1"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/pusherNumberEditText"
-                android:layout_gravity="center_horizontal"
-                android:contentDescription="@string/horizontalRule"
-                android:paddingBottom="5dp"
-                android:paddingTop="10dp"
-                android:src="@android:drawable/divider_horizontal_bright" />
-
-            <TextView
-                android:id="@+id/wifiSSIDLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/horizontalRule1"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:text="@string/wifiSSIDLabel"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-            <EditText
-                android:id="@+id/wifiSSIDEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/horizontalRule1"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_toRightOf="@id/wifiSSIDLabel"
-                android:ems="10"
-                android:inputType="number|textNoSuggestions" />
-
-            <TextView
-                android:id="@+id/wifiPassLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/wifiSSIDEditText"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:text="@string/wifiPassLabel"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-            <EditText
-                android:id="@+id/wifiPassEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/wifiSSIDEditText"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_toRightOf="@id/wifiPassLabel"
-                android:ems="10"
-                android:inputType="number|textNoSuggestions" />
-
-            <Spinner
-                android:id="@+id/wifi_protection_spinner"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/wifiPassEditText"
-                android:layout_marginTop="10dp" />
         </RelativeLayout>
     </ScrollView>
 
