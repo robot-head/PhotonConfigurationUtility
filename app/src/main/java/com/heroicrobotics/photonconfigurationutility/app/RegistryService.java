@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 
+import com.heroicrobot.dropbit.devices.pixelpusher.PixelPusher;
 import com.heroicrobot.dropbit.registry.DeviceRegistry;
 
 import java.util.Observable;
@@ -49,7 +50,7 @@ public class RegistryService extends Service {
         registry = new DeviceRegistry();
         observer = new PixelPusherObserver();
         registry.addObserver(observer);
-        registry.setAntiLog(true);
+        registry.startPushing();
     }
 
     // class IncomingHandler extends Handler {
@@ -71,6 +72,10 @@ public class RegistryService extends Service {
 
     public DeviceRegistry getRegistry() {
         return registry;
+    }
+
+    public void clearRegistry() {
+
     }
 
 }
