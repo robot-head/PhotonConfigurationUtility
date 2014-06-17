@@ -30,14 +30,6 @@ public class PhotonConfigActivity extends ActionBarActivity {
     protected boolean isBound;
     private static PixelPusher pusher;
 
-    class GetPusherDetailsTask extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            return null;
-        }
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
