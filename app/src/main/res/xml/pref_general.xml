@@ -1,0 +1,42 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+
+    <!-- NOTE: EditTextPreference accepts EditText attributes. -->
+    <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
+    <EditTextPreference
+        android:key="ssid"
+        android:title="@string/pref_title_ssid"
+        android:defaultValue="@string/pref_default_ssid"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:maxLines="1" />
+    <EditTextPreference
+        android:key="wifi_pass"
+        android:title="@string/pref_title_wifi_pass"
+        android:defaultValue="@string/pref_default_wifi_pass"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:maxLines="1" />
+
+
+    <!-- NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to
+         dismiss it. -->
+    <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
+    <ListPreference
+        android:key="wifi_protection"
+        android:title="@string/pref_title_wifi_protection"
+        android:defaultValue="3"
+        android:entries="@array/pref_wifi_protection_list_titles"
+        android:entryValues="@array/pref_wifi_protection_list_values"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null" />
+
+    <CheckBoxPreference
+        android:key="use_phone_as_ap"
+        android:title="@string/pref_title_use_phone_as_ap"
+        android:summary="@string/pref_summary_use_phone_as_ap"
+        android:defaultValue="true" />
+
+
+</PreferenceScreen>

@@ -1,0 +1,33 @@
+<resources>
+        <string name="title_activity_wifi_settings">Wifi Settings</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_wifi">WiFi Network Settings</string>
+
+    <string name="pref_title_social_recommendations">Enable social recommendations</string>
+    <string name="pref_description_social_recommendations">Recommendations for people to contact based on your message history</string>
+
+    <string name="pref_title_ssid">SSID</string>
+    <string name="pref_default_ssid">PixelPusher</string>
+    <string name="pref_title_wifi_pass">Password</string>
+    <string name="pref_default_wifi_pass">HeroicRobotics</string>
+
+    <string name="pref_title_wifi_protection">Wireless Protection</string>
+    <string name="pref_title_use_phone_as_ap">Use phone as access point</string>
+    <string-array name="pref_wifi_protection_list_titles">
+        <item>Open</item>
+        <item>WEP</item>
+        <item>WPA</item>
+        <item>WPA2</item>
+    </string-array>
+    <string-array name="pref_wifi_protection_list_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+
+</resources>

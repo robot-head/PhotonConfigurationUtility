@@ -1,35 +1,29 @@
 package com.heroicrobotics.photonconfigurationutility.app;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBar;
+import android.support.v4.app.Fragment;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.os.Build;
 
 
-public class MainActivity extends ActionBarActivity {
+
+public class NoSettingsStoredActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_no_settings_stored);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
-        }
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        String ssid = sharedPref.getString(WifiSettingsActivity.PREF_SSID_KEY, "");
-        if (ssid.equals("")) {
-            Intent intent = new Intent(this, NoSettingsStoredActivity.class);
-            startActivity(intent);
         }
     }
 
@@ -37,7 +31,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.no_settings_stored, menu);
         return true;
     }
 
@@ -48,8 +42,6 @@ public class MainActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            Intent intent = new Intent(this, WifiSettingsActivity.class);
-            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -65,19 +57,15 @@ public class MainActivity extends ActionBarActivity {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+                Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_no_settings_stored, container, false);
             return rootView;
         }
     }
 
-    public void newPhotonButtonClicked(View v) {
-        Intent intent = new Intent(this, NewPhotonActivity.class);
-        startActivity(intent);
-    }
-
-    public void existingPhotonButtonClicked(View v) {
-        Intent intent = new Intent(this, ExistingPhotonActivity.class);
+    public void continueButtonClicked(View v) {
+        Intent intent = new Intent(this, WifiSettingsActivity.class);
+        intent.putExtra(WifiSettingsActivity.EXTRA_CONTINUE_BUTTON_ACTION, "MainActivity");
         startActivity(intent);
     }
 }

@@ -36,4 +36,11 @@
     <string name="scan_result_multiple_photon_label">I have detected multiple Photons.\nPlease select one below to configure.</string>
     <string name="scan_result_no_photon_label">I have detected no Photons :(\nPlease click \'scan\' to attempt again.</string>
     <string name="scan_request_label">Please click scan to look for Photons</string>
+    <string name="pref_summary_use_phone_as_ap">If checked, your phone will act as an access point to provide a wireless network for your Photons.  Uncheck if you plan on connecting to a router or access point</string>
+    <string name="title_activity_no_settings_stored">NoSettingsStoredActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="no_settings_stored_label">Because this is the first time you\'ve run the Photon configuration tool, I need to gather information about your wireless network setup.  Click continue below to enter the settings screen.</string>
+    <string name="pref_title_continue">Continue with setup</string>
+    <string name="continue_with_setup_label">Continue with setup</string>
+
 </resources>
