@@ -1,17 +1,12 @@
 package com.heroicrobotics.photonconfigurationutility.app;
 
-import android.app.ProgressDialog;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,6 +34,9 @@ public class DetectPhotonActivity extends ActionBarActivity {
         @Override
         public void run() {
             adapter.clear();
+            if (myService.getRegistry() == null || myService.getRegistry().getPushers() == null) {
+                return;
+            }
             int numPushers = myService.getRegistry().getPushers().size();
             if (numPushers == 0) {
                 statusText.setText(R.string.scan_result_no_photon_label);
@@ -79,14 +77,16 @@ public class DetectPhotonActivity extends ActionBarActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        startService(new Intent(this, RegistryService.class));
         bindService(new Intent(this, RegistryService.class), myConnection, BIND_AUTO_CREATE);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        unbindService(myConnection);
+        if (isBound) {
+            unbindService(myConnection);
+            isBound = false;
+        }
     }
 
     private RegistryService myService;
@@ -110,7 +110,7 @@ public class DetectPhotonActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.detect_photon, menu);
+        //getMenuInflater().inflate(R.menu.detect_photon, menu);
         return true;
     }
 
@@ -175,8 +175,9 @@ public class DetectPhotonActivity extends ActionBarActivity {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Intent intent = new Intent(getActivity(), PhotonConfigActivity.class);
-                    intent.putExtra(PhotonConfigActivity.PIXEL_PUSHER_MAC_ADDR_KEY, ((PixelPusher) parent.getItemAtPosition(position)).getMacAddress());
-                    Log.d("TESTING", ((PixelPusher) parent.getItemAtPosition(position)).getMacAddress());
+                    intent.putExtra(
+                            PhotonConfigActivity.PIXEL_PUSHER_MAC_ADDR_KEY,
+                            ((PixelPusher) parent.getItemAtPosition(position)).getMacAddress());
                     startActivity(intent);
                 }
 

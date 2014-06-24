@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">PixelPusher Configuration Tool</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">WiFi Configuration</string>
     <string name="scan_button_label">Scan</string>
     <string name="title_activity_photon_config">PhotonConfigActivity</string>
     <string name="groupNumberLabel">Group Number</string>
@@ -45,5 +45,12 @@
     <string name="apply_wifi_button_text">Push WiFi config</string>
     <string name="scanning_for_photons_label_text">Scanning for Photons...</string>
     <string name="test_button_label">Test Photon</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="join_stored_wifi_message">Do you want your phone to join the wifi network you just pushed to your Photon?</string>
+    <string name="join_stored_wifi_title">Join wifi?</string>
+    <string name="wifi_send_dialog_title">Sending WiFi Configuration</string>
+    <string name="please_wait">Please Wait...</string>
+    <string name="rebooting_pusher_title">Rebooting Photon...</string>
 
 </resources>

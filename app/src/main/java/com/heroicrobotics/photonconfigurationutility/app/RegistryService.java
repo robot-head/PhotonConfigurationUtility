@@ -17,13 +17,16 @@ public class RegistryService extends Service {
 
         @Override
         public void update(Observable registry, Object updatedDevice) {
+            if (updatedDevice != null) {
+                ((DeviceRegistry) registry).startPushing();
+            }
 
         }
 
     }
 
-    public DeviceRegistry registry;
-    private PixelPusherObserver observer;
+    public static DeviceRegistry registry;
+    private static PixelPusherObserver observer;
 
     // final Messenger mMessenger = new Messenger(new IncomingHandler());
 
@@ -36,6 +39,9 @@ public class RegistryService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (registry == null) {
+            return;
+        }
         registry.stopPushing();
     }
 
@@ -47,20 +53,12 @@ public class RegistryService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        registry = new DeviceRegistry();
-        observer = new PixelPusherObserver();
-        registry.addObserver(observer);
-        registry.startPushing();
+        if (registry == null) {
+            registry = new DeviceRegistry();
+            observer = new PixelPusherObserver();
+            registry.addObserver(observer);
+        }
     }
-
-    // class IncomingHandler extends Handler {
-    //
-    // @Override
-    // public void handleMessage(Message msg) {
-    // super.handleMessage(msg);
-    // }
-    //
-    // }
 
     private final IBinder mBinder = new LocalBinder();
 
@@ -72,10 +70,6 @@ public class RegistryService extends Service {
 
     public DeviceRegistry getRegistry() {
         return registry;
-    }
-
-    public void clearRegistry() {
-
     }
 
 }

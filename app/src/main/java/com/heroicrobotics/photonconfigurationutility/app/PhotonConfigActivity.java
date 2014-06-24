@@ -1,11 +1,14 @@
 package com.heroicrobotics.photonconfigurationutility.app;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.net.wifi.WifiConfiguration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -31,6 +34,7 @@ import com.heroicrobotics.photonconfigurationutility.app.RegistryService.LocalBi
 public class PhotonConfigActivity extends ActionBarActivity {
 
     public static final String PIXEL_PUSHER_MAC_ADDR_KEY = "pixel_pusher_mac_addr";
+    private static final int _COMMAND_SPAM = 10;
     private String mPusherMac;
     protected RegistryService myService;
     protected boolean isBound;
@@ -56,7 +60,6 @@ public class PhotonConfigActivity extends ActionBarActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        startService(new Intent(this, RegistryService.class));
         bindService(new Intent(this, RegistryService.class), myConnection, BIND_AUTO_CREATE);
     }
 
@@ -91,6 +94,9 @@ public class PhotonConfigActivity extends ActionBarActivity {
                 return true;
             case R.id.action_test:
                 test();
+                return true;
+            case R.id.action_wifi_settings:
+                startActivity(new Intent(this, WifiSettingsActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -129,7 +135,11 @@ public class PhotonConfigActivity extends ActionBarActivity {
             if (extras != null) {
                 mPusherMac = extras.getString(PIXEL_PUSHER_MAC_ADDR_KEY);
                 if (mPusherMac != null) {
+                    if (myService.getRegistry().getPusherMap() == null || myService.getRegistry().getPusherMap().get(mPusherMac) == null) {
+                        return;
+                    }
                     pusher = myService.getRegistry().getPusherMap().get(mPusherMac);
+
                     runOnUiThread(new Runnable() {
                         public void run() {
                             ((EditText) findViewById(R.id.groupNumberEditText)).setText("" + pusher.getGroupOrdinal());
@@ -147,6 +157,44 @@ public class PhotonConfigActivity extends ActionBarActivity {
 
     };
 
+    class DialogBackgroundTask extends AsyncTask<Void, Void, Void> {
+
+        private final ProgressDialog d;
+        private final Runnable r;
+        private final String title;
+        private final String message;
+
+        public DialogBackgroundTask(Context context, Runnable runnable, String title, String message) {
+            d = new ProgressDialog(context);
+            r = runnable;
+            this.title = title;
+            this.message = message;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            r.run();
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            d.setTitle(title);
+            d.setMessage(message);
+            d.show();
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            try {
+                d.dismiss();
+            } catch (IllegalArgumentException e) {
+
+            }
+        }
+    }
     class TestPatternTask extends AsyncTask<Void, Void, Void> {
 
         private final ProgressDialog d;
@@ -160,22 +208,22 @@ public class PhotonConfigActivity extends ActionBarActivity {
         protected Void doInBackground(Void... voids) {
             for (Strip s : pusher.getStrips()) {
                 for (int i = 0; i < s.getLength(); i++) {
-                    s.setPixel(new Pixel((byte) 80,(byte) 0,(byte) 0), i);
+                    s.setPixel(new Pixel((byte) 80, (byte) 0, (byte) 0), i);
 
                 }
                 SystemClock.sleep(500);
                 for (int i = 0; i < s.getLength(); i++) {
-                    s.setPixel(new Pixel((byte) 0,(byte) 80,(byte) 0), i);
+                    s.setPixel(new Pixel((byte) 0, (byte) 80, (byte) 0), i);
 
                 }
                 SystemClock.sleep(500);
                 for (int i = 0; i < s.getLength(); i++) {
-                    s.setPixel(new Pixel((byte) 0,(byte) 0,(byte) 80), i);
+                    s.setPixel(new Pixel((byte) 0, (byte) 0, (byte) 80), i);
 
                 }
                 SystemClock.sleep(500);
                 for (int i = 0; i < s.getLength(); i++) {
-                    s.setPixel(new Pixel((byte) 0,(byte) 0,(byte) 0), i);
+                    s.setPixel(new Pixel((byte) 0, (byte) 0, (byte) 0), i);
                 }
             }
             return null;
@@ -215,21 +263,68 @@ public class PhotonConfigActivity extends ActionBarActivity {
         String ssid = sharedPref.getString(WifiSettingsActivity.PREF_SSID_KEY, "");
         String pass = sharedPref.getString(WifiSettingsActivity.PREF_WIFI_PASS_KEY, "");
         String protection = sharedPref.getString(WifiSettingsActivity.PREF_WIFI_PROTECTION_KEY, "");
-        if (ssid.equals("") || pass.equals("") || protection.equals("")) {
-            Toast.makeText(this, "Invalid wifi configuration", Toast.LENGTH_LONG).show();
+        if (protection.equalsIgnoreCase("none")) {
+            if (ssid.equals("")) {
+                Toast.makeText(this, "Invalid wifi configuration", Toast.LENGTH_LONG).show();
+                return;
+            }
+        } else {
+            if (ssid.equals("") || pass.equals("") || protection.equals("")) {
+                Toast.makeText(this, "Invalid wifi configuration", Toast.LENGTH_LONG).show();
+                return;
+            }
         }
         Log.d("TESTING", "Setting wifi config " + ssid + " : " + pass + " : " + protection);
-        pusher.sendCommand(new PusherCommand((byte) 3, ssid, pass, protection));
+        sendPusherCommand(new PusherCommand((byte) 3, ssid, pass, protection), true, false, getString(R.string.wifi_send_dialog_title), getString(R.string.please_wait));
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.join_stored_wifi_title)
+                .setMessage(R.string.join_stored_wifi_message)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        WifiConfiguration wifiConfig = new WifiConfiguration();
+                        startActivity(new Intent(PhotonConfigActivity.this, DetectPhotonActivity.class));
+
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(PhotonConfigActivity.this, DetectPhotonActivity.class));
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .show();
 
         // TODO: Join same wifi settings
-        myService.getRegistry().expireDevice(pusher.getMacAddress());
 
-        startActivity(new Intent(this, DetectPhotonActivity.class));
     }
 
     void reboot() {
-        pusher.sendCommand(new PusherCommand((byte) 1));
-        myService.getRegistry().expireDevice(pusher.getMacAddress());
-        startActivity(new Intent(this, DetectPhotonActivity.class));
+        sendPusherCommand(new PusherCommand((byte) 1), true, true, getString(R.string.rebooting_pusher_title), getString(R.string.please_wait));
     }
+
+    void sendPusherCommand(final PusherCommand command, final boolean expireDevice, final boolean detectPhoton, String dialogTitle, String dialogMessage) {
+        new DialogBackgroundTask(this, new Runnable(){
+
+            @Override
+            public void run() {
+                Log.d("TESTING", "Sending a command");
+                for (int i = 0; i < _COMMAND_SPAM; i++) {
+                    pusher.sendCommand(command);
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException e) {
+                        //
+                    }
+                }
+                if (expireDevice) {
+                    myService.getRegistry().expireDevice(pusher.getMacAddress());
+                }
+                if (detectPhoton) {
+                    startActivity(new Intent(PhotonConfigActivity.this, DetectPhotonActivity.class));
+                }
+            }
+        }, dialogTitle, dialogMessage).execute();
+
+    }
+
 }
